@@ -16,7 +16,7 @@ This project is a 10+ web-based Pattern Lock interface, similar to the Android p
 
 ## Demo
 
-> Add a live demo link here:
+> Added all available live demo link here:
 
 > [index.html](pattern-lock-template.vercel.app)
 
