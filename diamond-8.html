@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hexagonal Pattern Lock</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #282a36;
+            font-family: Arial, sans-serif;
+        }
+        .pattern-lock-container {
+            position: relative;
+        }
+        .pattern-lock {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 200px;
+            height: 200px;
+        }
+        .hexagon {
+            width: 60px;
+            height: 34.6px;
+            background-color: #6272a4;
+            position: relative;
+            margin: 17.3px 0;
+            cursor: pointer;
+            transition: background-color 0.4s;
+        }
+        .hexagon:before,
+        .hexagon:after {
+            content: "";
+            position: absolute;
+            width: 0;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+        }
+        .hexagon:before {
+            bottom: 100%;
+            border-bottom: 17.3px solid #6272a4;
+        }
+        .hexagon:after {
+            top: 100%;
+            width: 0;
+            border-top: 17.3px solid #6272a4;
+        }
+        .hexagon.active {
+            background-color: #ff79c6;
+        }
+        .hexagon.active:before {
+            border-bottom-color: #ff79c6;
+        }
+        .hexagon.active:after {
+            border-top-color: #ff79c6;
+        }
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            pointer-events: none;
+        }
+        line {
+            stroke: #ff79c6;
+            stroke-width: 4;
+            stroke-dasharray: 0, 200;
+            animation: dash 0.5s forwards;
+        }
+@keyframes dash {
+            from {
+                stroke-dasharray: 0, 200;
+            }
+            to {
+                stroke-dasharray: 200, 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="pattern-lock-container">
+        <svg></svg>
+        <div class="pattern-lock">
+            <div class="hexagon" data-id="1"></div>
+            <div class="hexagon" data-id="2"></div>
+            <div class="hexagon" data-id="3"></div>
+            <div class="hexagon" data-id="4"></div>
+            <div class="hexagon" data-id="5"></div>
+            <div class="hexagon" data-id="6"></div>
+            <div class="hexagon" data-id="7"></div>
+            <div class="hexagon" data-id="8"></div>
+            <div class="hexagon" data-id="9"></div>
+        </div>
+    </div>
+
+    <script>
+        const hexagons = document.querySelectorAll('.hexagon');
+        const svg = document.querySelector('svg');
+        let isMouseDown = false;
+        let pattern = [];
+        let prevHexagon = null;
+
+        const createLine = (start, end) => {
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', start.x);
+            line.setAttribute('y1', start.y);
+            line.setAttribute('x2', end.x);
+            line.setAttribute('y2', end.y);
+            svg.appendChild(line);
+
+        };
+        const startPattern = (hexagon) => {
+            if (!pattern.includes(hexagon.dataset.id)) {
+                pattern.push(hexagon.dataset.id); hexagon.classList.add('active');
+                const rect = hexagon.getBoundingClientRect();
+                const pos = {
+                    x: rect.left + rect.width / 2,
+                    y: rect.top + rect.height / 2
+                };
+
+                if (prevHexagon) createLine(prevHexagon, pos);
+                prevHexagon = pos;
+            }
+        };
+        hexagons.forEach(hexagon => {
+            hexagon.addEventListener('mousedown', () => {
+                isMouseDown = true; startPattern(hexagon);
+            }); hexagon.addEventListener('mouseenter', () => {
+                if (isMouseDown) startPattern(hexagon);
+            }); hexagon.addEventListener('touchstart',
+                (e) => {
+                    e.preventDefault(); startPattern(hexagon);
+                }); hexagon.addEventListener('touchmove',
+                (e) => {
+                    const touch = e.touches[0];
+                    const element = document.elementFromPoint(touch.clientX, touch.clientY); if (element && element.classList.contains('hexagon') && isMouseDown) {
+                        startPattern(element);
+                    }
+                });
+        });
+
+        const resetPattern = () => {
+            pattern = []; prevHexagon = null; hexagons.forEach(hexagon => hexagon.classList.remove('active')); while (svg.firstChild) {
+                svg.removeChild(svg.firstChild);
+            }
+        };
+
+        document.addEventListener('mouseup', () => {
+            if (isMouseDown) {
+                isMouseDown = false; alert('Pattern: ' + pattern.join('-')); resetPattern();
+            }
+        });
+
+
+        document.addEventListener('touchend', () => {
+            if (isMouseDown) {
+                isMouseDown = false; alert('Pattern: ' + pattern.join('-')); resetPattern();
+            }
+        });
+    </script>
+
+</body>
+</html>
