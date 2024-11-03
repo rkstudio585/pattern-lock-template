@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glowing Pattern Lock</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #1a1a2e;
+    font-family: Arial, sans-serif;
+  }
+  .pattern-lock {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 15px;
+    width: 200px;
+    height: 200px;
+  }
+  .circle {
+    width: 50px;
+    height: 50px;
+    background-color: #888;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  .circle.active {
+    background-color: #4CAF50;
+    box-shadow: 0 0 10px 5px rgba(76, 175, 80, 0.5);
+    animation: pulse 0.5s infinite alternate;
+  }
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1.2);
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="pattern-lock">
+  <div class="circle" data-id="1"></div>
+  <div class="circle" data-id="2"></div>
+  <div class="circle" data-id="3"></div>
+  <div class="circle" data-id="4"></div>
+  <div class="circle" data-id="5"></div>
+  <div class="circle" data-id="6"></div>
+  <div class="circle" data-id="7"></div>
+  <div class="circle" data-id="8"></div>
+  <div class="circle" data-id="9"></div>
+</div>
+
+<script>
+  const circles = document.querySelectorAll('.circle');
+  let isMouseDown = false;
+  let pattern = [];
+
+  const startPattern = (circle) => {
+    if (!pattern.includes(circle.dataset.id)) {
+      pattern.push(circle.dataset.id);
+      circle.classList.add('active');
+    }
+  };
+
+  circles.forEach(circle => {
+    circle.addEventListener('mousedown', () => {
+      isMouseDown = true;
+      startPattern(circle);
+    });
+    circle.addEventListener('mouseenter', () => {
+      if (isMouseDown) startPattern(circle);
+    });
+    circle.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      startPattern(circle);
+    });
+    circle.addEventListener('touchmove', (e) => {
+      const touch = e.touches[0];
+      const element = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (element && element.classList.contains('circle') && isMouseDown) {
+        startPattern(element);
+      }
+    });
+  });
+
+  const resetPattern = () => {
+    pattern = [];
+    circles.forEach(circle => circle.classList.remove('active'));
+  };
+
+  document.addEventListener('mouseup', () => {
+    if (isMouseDown) {
+      isMouseDown = false;
+      alert('Pattern: ' + pattern.join('-'));
+      resetPattern();
+    }
+  });
+
+  document.addEventListener('touchend', () => {
+    if (isMouseDown) {
+      isMouseDown = false;
+      alert('Pattern: ' + pattern.join('-'));
+      resetPattern();
+    }
+  });
+</script>
+
+</body>
+</html>
