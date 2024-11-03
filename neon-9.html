@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Light Pattern Lock</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #1e1e2f;
+    font-family: Arial, sans-serif;
+  }
+  .pattern-lock-container {
+    position: relative;
+  }
+  .pattern-lock {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    width: 240px;
+    height: 240px;
+  }
+  .circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #2a2a2a;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: background 0.4s;
+  }
+  .circle.active {
+    background: #ff0080;
+    box-shadow: 0 0 15px 5px rgba(255, 0, 128, 0.8);
+  }
+  svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: 240px;
+    pointer-events: none;
+  }
+  line {
+    stroke: #ff0080;
+    stroke-width: 4;
+    opacity: 0;
+    animation: pulse 0.3s forwards;
+  }
+  @keyframes pulse {
+    to {
+      opacity: 1;
+      stroke-dasharray: 100, 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="pattern-lock-container">
+  <svg></svg>
+  <div class="pattern-lock">
+    <div class="circle" data-id="1"></div>
+    <div class="circle" data-id="2"></div>
+    <div class="circle" data-id="3"></div>
+    <div class="circle" data-id="4"></div>
+    <div class="circle" data-id="5"></div>
+    <div class="circle" data-id="6"></div>
+    <div class="circle" data-id="7"></div>
+    <div class="circle" data-id="8"></div>
+    <div class="circle" data-id="9"></div>
+  </div>
+</div>
+
+<script>
+  const circles = document.querySelectorAll('.circle');
+  const svg = document.querySelector('svg');
+  let isMouseDown = false;
+  let pattern = [];
+  let prevCircle = null;
+
+  const createLine = (start, end) => {
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', start.x);
+    line.setAttribute('y1', start.y);
+    line.setAttribute('x2', end.x);
+    line.setAttribute('y2', end.y);
+    svg.appendChild(line);
+  };
+
+  const startPattern = (circle) => {
+    if (!pattern.includes(circle.dataset.id)) {
+      pattern.push(circle.dataset.id);
+      circle.classList.add('active');
+
+      const rect = circle.getBoundingClientRect();
+      const pos = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+
+      if (prevCircle) createLine(prevCircle, pos);
+      prevCircle = pos;
+    }
+  };
+
+  circles.forEach(circle => {
+    circle.addEventListener('mousedown', () => {
+      isMouseDown = true;
+      startPattern(circle);
+    });
+    circle.addEventListener('mouseenter', () => {
+      if (isMouseDown) startPattern(circle);
+    });
+    circle.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      startPattern(circle);
+    });
+    circle.addEventListener('touchmove', (e) => {
+      const touch = e.touches[0];
+      const element = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (element && element.classList.contains('circle') && isMouseDown) {
+        startPattern(element);
+      }
+    });
+  });
+
+  const resetPattern = () => {
+    pattern = [];
+    prevCircle = null;
+    circles.forEach(circle => circle.classList.remove('active'));
+    while (svg.firstChild) {
+      svg.removeChild(svg.firstChild);
+    }
+  };
+
+  document.addEventListener('mouseup', () => {
+    if (isMouseDown) {
+      isMouseDown = false;
+      alert('Pattern: ' + pattern.join('-'));
+      resetPattern();
+    }
+  });
+
+  document.addEventListener('touchend', () => {
+    if (isMouseDown) {
+      isMouseDown = false;
+      alert('Pattern: ' + pattern.join('-'));
+      resetPattern();
+    }
+  });
+</script>
+
+</body>
+</html>
