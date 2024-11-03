@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SVG Line Pattern Lock</title>
+<title>Rotating Gradient Pattern Lock</title>
 <style>
   * {
     margin: 0;
@@ -15,7 +15,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #222;
+    background-color: #0d1117;
     font-family: Arial, sans-serif;
   }
   .pattern-lock-container {
@@ -31,14 +31,15 @@
   .circle {
     width: 50px;
     height: 50px;
-    background-color: #888;
+    background: linear-gradient(145deg, #6a11cb, #2575fc);
     border-radius: 50%;
     position: relative;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: transform 0.4s, background-color 0.4s;
   }
   .circle.active {
-    background-color: #FFD700;
+    transform: rotate(360deg);
+    background: linear-gradient(145deg, #21d4fd, #b721ff);
   }
   svg {
     position: absolute;
@@ -49,15 +50,23 @@
     pointer-events: none;
   }
   line {
-    stroke: #FFD700;
+    stroke: url(#grad);
     stroke-width: 4;
+    transition: stroke-dasharray 0.4s;
   }
 </style>
 </head>
 <body>
 
 <div class="pattern-lock-container">
-  <svg></svg>
+  <svg>
+    <defs>
+      <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#6a11cb;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#2575fc;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+  </svg>
   <div class="pattern-lock">
     <div class="circle" data-id="1"></div>
     <div class="circle" data-id="2"></div>
@@ -91,10 +100,10 @@
     if (!pattern.includes(circle.dataset.id)) {
       pattern.push(circle.dataset.id);
       circle.classList.add('active');
-      
+
       const rect = circle.getBoundingClientRect();
       const pos = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-      
+
       if (prevCircle) createLine(prevCircle, pos);
       prevCircle = pos;
     }
