@@ -1,6 +1,6 @@
 # Pattern Lock - Web Version
 
-![logo](logo.svg)
+![logo](ffe14c14-5670-41a4-aab6-c4102b77264a.webp)
 
 ## Overview
 
