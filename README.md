@@ -16,7 +16,23 @@ This project is a 10+ web-based Pattern Lock interface, similar to the Android p
 
 ## Demo
 
-> Add a live demo link here if you have deployed it, or add screenshots of the Pattern Lock in action.
+> Add a live demo link here:
+> [index.html](pattern-lock-template.vercel.app)
+> [1.html](https://pattern-lock-template.vercel.app/1.html)
+> [2.html](https://pattern-lock-template.vercel.app/2.html)
+> [best-animation-3.html](https://pattern-lock-template.vercel.app/best-animation-3.html)
+> [alert-4.html](https://pattern-lock-template.vercel.app/alert-4.html)
+> [Spacial-5.html](https://pattern-lock-template.vercel.app/Spacial-5.html)
+> [jumping-6.html](https://pattern-lock-template.vercel.app/jumping-6.html)
+> [glowing-boll-7.html](https://pattern-lock-template.vercel.app/glowing-boll-7.html)
+> [diamond-8.html](https://pattern-lock-template.vercel.app/diamond-8.html)
+> [neon-9.html](https://pattern-lock-template.vercel.app/neon-9.html)
+> [3d-10.html](https://pattern-lock-template.vercel.app/3d-10.html)
+> [gradient-ripple-11.html](https://pattern-lock-template.vercel.app/gradient-ripple-11.html)
+> [retro-pixel-12.html](https://pattern-lock-template.vercel.app/retro-pixel-12.html)
+> [13.html](https://pattern-lock-template.vercel.app/13.html)
+> [14.html](https://pattern-lock-template.vercel.app/14.html)
+> [15.html](https://pattern-lock-template.vercel.app/15.html)
 
 ## Technologies Used
 
